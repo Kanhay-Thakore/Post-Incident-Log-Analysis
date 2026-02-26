@@ -489,7 +489,7 @@ Overall incident severity is classified as **HIGH → CRITICAL** based on confir
 
 Full investigation report available:
 
-- **[Technical Report](reports/POST_INCIDENT_LOG_ANALYSIS.pdf)** — Complete capstone project report
+- **[Technical Report](reports/S1P3_POST_INCIDENT_LOG_ANALYSIS.pdf)** — Complete capstone project report
 
 ---
 
