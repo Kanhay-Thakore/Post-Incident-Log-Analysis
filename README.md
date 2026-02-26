@@ -193,8 +193,7 @@ Full post-incident forensic investigation of a confirmed security breach recorde
 
 ### 6. File Deletion — Malware Cleanup / Anti-Forensics (T1070.004)
 
-![File Deletion](images/file_deletion_01.png)
-![File Deletion Expanded](images/file_deletion_02.png)
+![File Deletion Expanded](images/file_deletion_01.png)
 
 <h3>File deletions logged via Mozilla Firefox process at 16:05:58 UTC — consistent with malware self-cleanup or an attacker covering tracks after payload execution</h3>
 
@@ -218,7 +217,7 @@ Full post-incident forensic investigation of a confirmed security breach recorde
 
 ### 9. Process Injection — CreateRemoteThread Detected (T1055)
 
-![Process Injection](images/process_injection_01.png)
+![Process Injection](images/T1055_Remote_Thread_process_injection_01.png)
 
 <h3>vmtoolsd.exe (VMware Tools) used as source for CreateRemoteThread events targeting svchost.exe — malicious code executing inside a trusted Windows process to evade detection</h3>
 
@@ -229,6 +228,26 @@ Full post-incident forensic investigation of a confirmed security breach recorde
 ![Cryptographic Activity](images/crypto_activity_01.png)
 
 <h3>RSA key operations detected via Microsoft Software Key Storage Provider — key name 5766aa7a-6c36-1276-5cef-20e318e937c6 accessed under SYSTEM account; possible credential theft</h3>
+
+**Also observed in this window — Defense Evasion via Registry Modification (T1112 / T1547):**
+
+![Registry Modification Firewall Logs](images/registry_defense_evasion_01.png)
+
+<h3>Firewall logs and Windows Event Logs showing unauthorized registry changes at 11:17 AM — HKLM\Software\Microsoft\Windows\CurrentVersion\Run modified via svchost.exe to ensure malware execution persists after system reboots</h3>
+
+**Evidence:**
+- **Registry Path:** `HKLM\Software\Microsoft\Windows\CurrentVersion\Run` — commonly abused for persistence
+- **Modification Timestamp:** 11:17 AM — correlates directly with observed attacker activity window
+- **Process:** `svchost.exe` — leveraged to execute malware or maintain persistence under the guise of a legitimate Windows service
+
+**Impact:** Attackers modified system settings to guarantee malware execution survives reboots, establishing a long-term foothold on the compromised host.
+
+**MITRE ATT&CK Mapping:**
+
+| Technique ID | Technique Name | Description |
+|---|---|---|
+| T1112 | Modify Registry | Registry abused for persistence and defense evasion |
+| T1547 | Boot or Logon Autostart Execution | Registry Run keys used to auto-execute malicious scripts on startup |
 
 ---
 
@@ -276,8 +295,6 @@ Full post-incident forensic investigation of a confirmed security breach recorde
 
 ### Phase 1: Initial Intrusion & Credential Access (15:25 – 15:30)
 
-![Timeline Phase 1](images/timeline_phase1.png)
-
 | Timestamp | Event ID | Event | Host | Description |
 |-----------|----------|-------|------|-------------|
 | 15:25 | — | Initial Activity | web.mosa.atr | CompatTelRunner.exe executes PowerShell reconnaissance |
@@ -289,8 +306,6 @@ Full post-incident forensic investigation of a confirmed security breach recorde
 ---
 
 ### Phase 2: Privilege Escalation & Persistence (15:30 – 15:59)
-
-![Timeline Phase 2](images/timeline_phase2.png)
 
 | Timestamp | Event ID | Event | User / Host | Description |
 |-----------|----------|-------|-------------|-------------|
@@ -307,8 +322,6 @@ Full post-incident forensic investigation of a confirmed security breach recorde
 
 ### Phase 3: Malicious Execution & C2 Communication (16:00 – 16:55)
 
-![Timeline Phase 3](images/timeline_phase3.png)
-
 | Timestamp | Event Type | Source IP | Target | Description | MITRE ID | Risk |
 |-----------|-----------|-----------|--------|-------------|----------|------|
 | 16:00 | JavaScript Execution | — | — | Malicious JS file created & executed | T1059.007 | High |
@@ -321,8 +334,6 @@ Full post-incident forensic investigation of a confirmed security breach recorde
 ---
 
 ### Phase 4: Exfiltration & Lateral Movement (16:55 – 19:30)
-
-![Timeline Phase 4](images/timeline_phase4.png)
 
 | Timestamp | Event Type | Source IP | Target IP | Description | MITRE ID | Risk |
 |-----------|-----------|-----------|-----------|-------------|----------|------|
